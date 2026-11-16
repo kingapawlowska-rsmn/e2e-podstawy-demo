@@ -67,17 +67,18 @@ Dwie linie warte omówienia:
 
 Testy Klaudiusza (04, 05, 06)
 
-| Test | Co sprawdza | Czego nie sprawdza |
-|---|---|---|
-| 04-ceny-promocyjne (jeden wiersz na cały plik) | Dla 3 produktów (Odżywka, Krem, Serum) kafelek pokazuje starą cenę i nową cenę, wpisane na sztywno w tablicy, oraz że plakietka jest widoczna. | Że rabat wynosi 20%: nic tego nie liczy, nowa cena jest przepisana z tablicy. Nie sprawdza tekstu plakietki („-20%”), tylko to, że jest widoczna. Nie sprawdza ceny w tabeli ani na karcie produktu. |
-| 05 › karta produktu pokazuje opis i dostępność | Po kliknięciu kafelka „Szampon nawilżający” otwiera się karta z nagłówkiem h1 o tej nazwie (w funkcji), opis zawiera „400 ml”, dostępność zawiera „Dostępny”. | Całego opisu, tylko fragment „400 ml”. Że przycisk „Dodaj do koszyka” jest aktywny. |
-| 05 › cena na karcie produktu jest taka sama jak na kafelku | Karta „Krem do twarzy na dzień” się otwiera (w funkcji) i pokazuje cenę „26,39 zł”. | Tego, co obiecuje nazwa: nie odczytuje ceny z kafelka, porównuje z liczbą wpisaną na sztywno. Nie sprawdza starej ceny ani plakietki na karcie. |
-| 05 › produktu niedostępnego nie da się dodać do koszyka z karty produktu | Karta „Maska do włosów z olejem arganowym” się otwiera (w funkcji), dostępność to „Niedostępny”, przycisk „Dodaj do koszyka” jest zablokowany. | Że pole Ilość też jest zablokowane. Że koszyk się nie zmienia (próba dodania przez formularz lub API). |
-| 06-filtr-kategorii (jeden wiersz na cały plik) | Dla kategorii Włosy, Dziecko i Dom: po wybraniu kategorii i kliknięciu „Filtruj” licznik pokazuje 4 / 3 / 1, a w tabeli jest wiersz z przykładowym produktem tej kategorii. | Że na liście są tylko produkty z tej kategorii (brak produktów z innych kategorii). Test „lista zawiera produkt…” przeszedłby nawet wtedy, gdyby filtr w ogóle nie działał, bo produkt jest też na pełnej liście. Nie sprawdza, że lista ma tyle wierszy, ile pokazuje licznik. |
+| Test                                                                     | Co sprawdza                                                                                                                                                                 | Czego nie sprawdza                                                                                                                                                                                                                                                              |
+| ------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 04-ceny-promocyjne (jeden wiersz na cały plik)                           | Dla 3 produktów (Odżywka, Krem, Serum) kafelek pokazuje starą cenę i nową cenę, wpisane na sztywno w tablicy, oraz że plakietka jest widoczna.                              | Że rabat wynosi 20%: nic tego nie liczy, nowa cena jest przepisana z tablicy. Nie sprawdza tekstu plakietki („-20%”), tylko to, że jest widoczna. Nie sprawdza ceny w tabeli ani na karcie produktu.                                                                            |
+| 05 › karta produktu pokazuje opis i dostępność                           | Po kliknięciu kafelka „Szampon nawilżający” otwiera się karta z nagłówkiem h1 o tej nazwie (w funkcji), opis zawiera „400 ml”, dostępność zawiera „Dostępny”.               | Całego opisu, tylko fragment „400 ml”. Że przycisk „Dodaj do koszyka” jest aktywny.                                                                                                                                                                                             |
+| 05 › cena na karcie produktu jest taka sama jak na kafelku               | Karta „Krem do twarzy na dzień” się otwiera (w funkcji) i pokazuje cenę „26,39 zł”.                                                                                         | Tego, co obiecuje nazwa: nie odczytuje ceny z kafelka, porównuje z liczbą wpisaną na sztywno. Nie sprawdza starej ceny ani plakietki na karcie.                                                                                                                                 |
+| 05 › produktu niedostępnego nie da się dodać do koszyka z karty produktu | Karta „Maska do włosów z olejem arganowym” się otwiera (w funkcji), dostępność to „Niedostępny”, przycisk „Dodaj do koszyka” jest zablokowany.                              | Że pole Ilość też jest zablokowane. Że koszyk się nie zmienia (próba dodania przez formularz lub API).                                                                                                                                                                          |
+| 06-filtr-kategorii (jeden wiersz na cały plik)                           | Dla kategorii Włosy, Dziecko i Dom: po wybraniu kategorii i kliknięciu „Filtruj” licznik pokazuje 4 / 3 / 1, a w tabeli jest wiersz z przykładowym produktem tej kategorii. | Że na liście są tylko produkty z tej kategorii (brak produktów z innych kategorii). Test „lista zawiera produkt…” przeszedłby nawet wtedy, gdyby filtr w ogóle nie działał, bo produkt jest też na pełnej liście. Nie sprawdza, że lista ma tyle wierszy, ile pokazuje licznik. |
 
 Odpowiedzi
 
 04:
+
 - Z pliku powstaną 3 testy, po jednym na każdy produkt z tablicy (pętla for w test.describe).
 - Nazwy:
   Ceny promocyjne na kafelkach › Odżywka do włosów ma cenę obniżoną o 20%
@@ -86,11 +87,13 @@ Odpowiedzi
 - Która linia sprawdza „obniżoną o 20%”? Żadna. Linia 21 sprawdza starą cenę, linia 22 nową cenę, obie przepisane z tablicy. Linia 23 sprawdza tylko, że plakietka jest widoczna, a nie jej tekst „-20%”. Ceny w tablicy akurat zgadzają się z rabatem 20% (np. 14,99 x 0,8 = 11,99), ale wyliczył je autor, nie test. Gdyby aplikacja dała rabat 25%, a ktoś poprawił tablicę, test dalej by przechodził.
 
 05:
+
 - Funkcja otworzKarteProduktu, zanim test dojdzie do swoich linii z expect: otwiera stronę główną (goto '/'), w kafelku produktu klika link z nazwą produktu i sprawdza, że widać nagłówek h1 z tą nazwą. Czyli zawiera już jedną asercję.
 - Drugi test ma razem 2 asercje: 1 w funkcji (nagłówek h1 widoczny) + 1 w teście (cena 26,39 zł).
 - CLAUDE.md w repo: „Bez Page Object, własnych fixtures i funkcji pomocniczych, chyba że użytkownik o nie poprosi.” Funkcja otworzKarteProduktu łamie tę zasadę. Plik łamie też zasadę „Importuj wyłącznie import { test, expect } from '@playwright/test';”, bo importuje dodatkowo type Page (potrzebny właśnie przez funkcję pomocniczą).
 
 06:
+
 - Powstanie 6 testów: 3 kategorie x 2 testy w każdej grupie.
 - Pełna nazwa przykładowego testu w raporcie:
   [chromium] › tests\czytanie\06-filtr-kategorii.spec.ts › Filtr kategorii › kategoria Dom › licznik pokazuje liczbę produktów w kategorii
@@ -98,7 +101,7 @@ Odpowiedzi
   1. page.goto('/') - otwiera stronę główną
   2. selectOption('Dom') i click „Filtruj” - wybiera kategorię i filtruje
   3. dopiero potem sam test: licznik ma pokazać „1”
-  Oba beforeEach wykonują się przed każdym z 6 testów osobno.
+     Oba beforeEach wykonują się przed każdym z 6 testów osobno.
 
 Komentarz do review (najpoważniejsza luka)
 
@@ -112,11 +115,13 @@ Propozycja asercji (dopisać w tym teście, nazwę zmienić na „lista zawiera 
 
 ```ts
 // Wiersze z produktami (wiersz nagłówka nie ma komórek typu cell).
-const wierszeZProduktami = page.getByRole('row').filter({ has: page.getByRole('cell') });
+const wierszeZProduktami = page
+  .getByRole("row")
+  .filter({ has: page.getByRole("cell") });
 
 // Wiersze, w których żadna komórka nie jest dokładnie nazwą wybranej kategorii.
 const wierszeZInnejKategorii = wierszeZProduktami.filter({
-  hasNot: page.getByRole('cell', { name: kategoria.nazwa, exact: true }),
+  hasNot: page.getByRole("cell", { name: kategoria.nazwa, exact: true }),
 });
 
 // Po filtrowaniu nie może zostać ani jeden produkt z innej kategorii.
@@ -125,3 +130,5 @@ await expect(wierszeZInnejKategorii).toHaveCount(0);
 
 Istniejącą asercję z przykładowym produktem warto zostawić: toHaveCount(0) przeszłoby też na pustej liście, a ona pilnuje, że lista nie jest pusta.
 Dlaczego to, a nie 04 (brak sprawdzenia 20%): w 04 ceny w tablicy są poprawne, więc test łapie zmianę ceny. Test w 06 nie łapie niczego.
+
+---
