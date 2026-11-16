@@ -18,6 +18,15 @@ test("filtr „Dziecko” pokazuje tylko produkty dla dzieci", async ({ page }) 
   await expect(page.getByRole("row").filter({ hasText: "Szampon dla dzieci" })).toBeVisible();
   await expect(page.getByRole("row").filter({ hasText: "Krem ochronny dla dzieci" })).toBeVisible();
 
+  // „Tylko”: w tabeli są dokładnie 3 wiersze produktów, tyle samo co w liczniku.
+  // Wiersz produktu ma komórki (cell). Wiersz nagłówka ma nagłówki kolumn (columnheader), więc się nie liczy.
+  const wierszeProduktow = page.getByRole("row").filter({ has: page.getByRole("cell") });
+  await expect(wierszeProduktow).toHaveCount(3);
+
+  // Każdy z tych wierszy ma w kolumnie „Kategoria” wartość „Dziecko”.
+  const wierszeDziecko = wierszeProduktow.filter({ has: page.getByRole("cell", { name: "Dziecko", exact: true }) });
+  await expect(wierszeDziecko).toHaveCount(3);
+
   // Produktu z kategorii Włosy nie ma w tabeli.
   await expect(page.getByRole("row").filter({ hasText: "Szampon nawilżający" })).toHaveCount(0);
 });

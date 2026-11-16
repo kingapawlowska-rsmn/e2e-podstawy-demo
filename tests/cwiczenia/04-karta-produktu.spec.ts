@@ -62,3 +62,70 @@ test("cena promocyjna kremu jest taka sama na kafelku, karcie produktu i w koszy
     .click();
   await expect(wierszKremu).toHaveCount(0);
 });
+
+// Dla szybszych: kod rabatowy. Konto tester12 ma własny koszyk, niezależny od tester11.
+test("kod CZARNY20 obniża sumę do zapłaty za krem do 21,11 zł", async ({
+  page,
+}) => {
+  // 1. Zaloguj się jako tester12.
+  await page.goto("/logowanie");
+  await page.getByLabel("Login").fill("tester12");
+  await page.getByLabel("Hasło").fill("czarny-piatek-2026");
+  await page.getByRole("button", { name: "Zaloguj" }).click();
+  await expect(page.getByText("Zalogowano jako tester12")).toBeVisible();
+
+  // 2. Dodaj krem do koszyka z tabeli produktów.
+  await page.getByRole("link", { name: "Produkty" }).click();
+  await page
+    .getByRole("button", { name: "Dodaj do koszyka: Krem do twarzy na dzień" })
+    .click();
+  await expect(
+    page.getByText("Dodano do koszyka: Krem do twarzy na dzień"),
+  ).toBeVisible();
+
+  // 3. W koszyku wpisz kod CZARNY20 i zastosuj go.
+  await page.getByRole("link", { name: "Koszyk" }).click();
+  await page.getByLabel("Kod rabatowy").fill("CZARNY20");
+  await page.getByRole("button", { name: "Zastosuj kod" }).click();
+  await expect(
+    page.getByText("Kod CZARNY20 przyjęty: -20% na całe zamówienie."),
+  ).toBeVisible();
+
+  // 4. Suma do zapłaty po rabacie: 26,39 zł - 20% = 21,11 zł.
+  // Suma jest w akapicie „Pozycji: 1, razem: …”.
+  await expect(page.getByText("razem:")).toContainText("21,11 zł");
+
+  // 5. Sprzątanie: usuń kod, a potem krem, żeby koszyk tester12 był pusty.
+  await page.getByRole("button", { name: "Usuń kod" }).click();
+  await expect(page.getByRole("button", { name: "Usuń kod" })).toHaveCount(0);
+  const wierszKremu = page
+    .getByRole("row")
+    .filter({ hasText: "Krem do twarzy na dzień" });
+  await wierszKremu
+    .getByRole("button", { name: "Usuń: Krem do twarzy na dzień" })
+    .click();
+  await expect(wierszKremu).toHaveCount(0);
+});
+
+// Produkt niedostępny: Serum z witaminą C ma stan 0. Karta produktu nie wymaga logowania.
+test("na karcie niedostępnego serum przycisk „Dodaj do koszyka” i pole „Ilość” są wyłączone", async ({
+  page,
+}) => {
+  // 1. Otwórz stronę „Produkty” i znajdź kafelek serum (nie wiersz tabeli).
+  await page.goto("/");
+  const kafelekSerum = page.getByRole("article", {
+    name: "Serum z witaminą C",
+  });
+
+  // 2. Kliknij nazwę serum w kafelku, żeby otworzyć kartę produktu.
+  await kafelekSerum.getByRole("link", { name: "Serum z witaminą C" }).click();
+  await expect(
+    page.getByRole("heading", { name: "Serum z witaminą C" }),
+  ).toBeVisible();
+
+  // 3. Produktu nie ma na stanie, więc nie da się go dodać do koszyka.
+  await expect(
+    page.getByRole("button", { name: "Dodaj do koszyka" }),
+  ).toBeDisabled();
+  await expect(page.getByLabel("Ilość")).toBeDisabled();
+});
