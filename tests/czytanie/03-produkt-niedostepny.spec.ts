@@ -9,4 +9,9 @@ test('produktu niedostępnego nie da się dodać do koszyka', async ({ page }) =
 
   await expect(wiersz).toBeVisible();
   await expect(wiersz.getByText('Niedostępny')).toBeVisible();
+
+  // Sedno testu: przycisk dodania do koszyka jest zablokowany.
+  await expect(
+    wiersz.getByRole('button', { name: 'Dodaj do koszyka: Serum z witaminą C' }),
+  ).toBeDisabled();
 });
