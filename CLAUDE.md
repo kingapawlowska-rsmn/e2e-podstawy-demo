@@ -25,3 +25,13 @@ Testy czytają i oceniają testerzy, którzy dopiero uczą się kodu. Pisz prost
 - Konta demo: `user` / `user123` (klient), `admin` / `admin123` (administrator).
 - Opis API: `app/openapi.json`, w przeglądarce http://localhost:4100/api/docs.
 - Nie zmieniaj kodu aplikacji w `app/`, chyba że użytkownik wyraźnie o to prosi.
+
+## Review i dane testowe
+- Sprawdzaj efekt biznesowy akcji (status zamówienia, zapisane dane, treść komunikatu), a nie kolor, klasę CSS ani układ strony.
+- Oczekiwane wartości (liczby, ceny, teksty) bierz z wymagania albo przypadku testowego, nigdy nie przepisuj ich ze strony.
+- Test, który zmienia dane, ma sprzątać po sobie w `afterEach` albo tworzyć własne dane, żeby przechodził przy każdym uruchomieniu i nie zależał od innych testów.
+- Do każdego zdania wymagania napisz asercję, która padnie, gdy akcja się nie uda; nie sprawdzaj elementów widocznych już przed akcją.
+- Porównuj tekst dokładnie przez `toHaveText` i używaj tylko tekstów, które aplikacja naprawdę pokazuje, także w asercjach z `not` i `toBeHidden()`.
+- Nie używaj `.first()`, `.nth()` ani `.last()`, jeśli nie wiesz, które elementy pasują; element w wierszu tabeli szukaj wewnątrz tego wiersza.
+- Wymaganie klienta testuj na koncie `user`, a wymaganie administratora na koncie `admin`.
+- Zanim oddasz test, pokaż, że potrafi paść, i zamiast „jestem pewien” podaj wynik uruchomienia.
