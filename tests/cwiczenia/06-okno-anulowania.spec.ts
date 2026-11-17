@@ -36,14 +36,33 @@ test.afterEach(async ({ request }) => {
   expect([200, 409]).toContain(odpowiedz.status());
 });
 
-test.fixme('„Wróć” zamyka okno i zamówienie zostaje nowe', async ({ page }) => {
+test('„Wróć” zamyka okno i zamówienie zostaje nowe', async ({ page }) => {
+  const wiersz = page.getByRole('row').filter({ hasText: numer });
+  const okno = page.getByRole('dialog');
+
   // TODO 1: w wierszu zamówienia `numer` kliknij „Anuluj”.
+  await wiersz.getByRole('button', { name: 'Anuluj' }).click();
+
   // TODO 2: sprawdź, że okno (rola dialog) jest widoczne, a jego nagłówek to „Anulować zamówienie <numer>?”.
+  await expect(okno).toBeVisible();
+  await expect(okno.getByRole('heading')).toHaveText(`Anulować zamówienie ${numer}?`);
+
   // TODO 3: kliknij „Wróć” w oknie.
+  await okno.getByRole('button', { name: 'Wróć' }).click();
+
   // TODO 4: sprawdź, że okno jest ukryte, a wiersz nadal ma status „Nowe”.
+  await expect(okno).toBeHidden();
+  await expect(wiersz).toContainText('Nowe');
 });
 
-test.fixme('„Tak, anuluj” anuluje zamówienie', async ({ page }) => {
+test('„Tak, anuluj” anuluje zamówienie', async ({ page }) => {
+  const wiersz = page.getByRole('row').filter({ hasText: numer });
+
   // TODO 1: w wierszu zamówienia `numer` kliknij „Anuluj”, w oknie kliknij „Tak, anuluj”.
+  await wiersz.getByRole('button', { name: 'Anuluj' }).click();
+  await page.getByRole('dialog').getByRole('button', { name: 'Tak, anuluj' }).click();
+
   // TODO 2: sprawdź komunikat „Anulowano zamówienie <numer>” i status „Anulowane” w wierszu.
+  await expect(page.getByText(`Anulowano zamówienie ${numer}`)).toBeVisible();
+  await expect(wiersz).toContainText('Anulowane');
 });
