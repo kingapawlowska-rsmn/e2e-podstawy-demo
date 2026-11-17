@@ -7,7 +7,8 @@ test('administrator widzi link do panelu admina', async ({ page }) => {
 
   await page.getByLabel('Login').fill('admin');
   await page.getByLabel('Hasło').fill('admin123');
-  await page.getByRole('button', { name: 'Zaloguj się' }).click();
+  // Przycisk w formularzu ma napis „Zaloguj”, nie „Zaloguj się”.
+  await page.getByRole('button', { name: 'Zaloguj' }).click();
 
   await expect(page.getByRole('link', { name: 'Panel admina' })).toBeVisible();
 });
