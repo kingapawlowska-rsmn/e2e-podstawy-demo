@@ -1,5 +1,14 @@
 # Moje review
 
+## Ćwiczenie 08: poprawki do planu
+
+Poprawki do planu i testu `tests/cwiczenia/08-zmiana-adresu.spec.ts` po porównaniu z `docs/scenariusze/zmiana-adresu.md` i `.feature`:
+
+1. Linia `test.describe.configure({ mode: 'serial' });` ma być zapisana dokładnie jak w zadaniu, w pojedynczym cudzysłowie. Claude zapisał `"serial"` i linii nie dało się znaleźć po tekście z zadania.
+2. Brak sprawdzenia warunku wstępnego: po otwarciu „Adres dostawy” pola mają zawierać adres startowy (TC-ADR-01 krok 2, TC-ADR-02 krok 1). Dopisane w `beforeEach` dla wszystkich 4 pól.
+3. Brak sprawdzenia, że pola pokazują wpisane wartości przed kliknięciem „Zapisz adres” (TC-ADR-01 krok 3). Dopisane.
+4. W testach z tabeli Przykłady sprawdzane było tylko zmienione pole. Wymaganie „adres zapisany na koncie się nie zmieni” dotyczy całego adresu: po ponownym otwarciu strony sprawdzane są teraz wszystkie 4 pola.
+
 ## Ćwiczenie 08, część B: porównanie formatów TC-FV-01
 
 Kroki z `docs/scenariusze/biuro-mikolaja.md` (Azure Test Plans) zestawione z liniami `docs/scenariusze/biuro-mikolaja.feature` (Gherkin).
