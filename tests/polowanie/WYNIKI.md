@@ -17,9 +17,9 @@ Spotkanie „wydajemy czy nie”, 18.11.2026. Stan tablicy o 10:22: **1. miejsce
 $env:APP_USER="tester04"
 $env:APP_PASSWORD="czarny-piatek-2026"
 $env:BASE_URL="https://namssor-rc-376292984721.europe-central2.run.app"
-npx playwright test tests/polowanie        # rc: 6 failed
+npx playwright test tests/polowanie        # rc: 7 failed
 $env:BASE_URL="https://namssor-376292984721.europe-central2.run.app"
-npx playwright test tests/polowanie        # wersja zwykła: 6 passed
+npx playwright test tests/polowanie        # wersja zwykła: 7 passed
 ```
 
 ## Błędy (tylko na `rc`)
@@ -32,6 +32,8 @@ npx playwright test tests/polowanie        # wersja zwykła: 6 passed
 | 4 | adresy | nowy adres staje się domyślny | `adres-domyslny.spec.ts` |
 | 5 | faktura | NIP sprzedawcy zamiast NIP nabywcy | `faktura-nip-nabywcy.spec.ts` |
 | 6 | API | 200 zamiast 404 dla nieistniejącego zamówienia | `api-zamowienie-nieistniejace.spec.ts` |
+| 7 | koszyk / inne | aktywny „Dodaj do koszyka” na karcie produktu niedostępnego | `karta-produkt-niedostepny.spec.ts` |
+| 8 | koszyk | po usunięciu ostatniej pozycji licznik „Pozycji: 1” | `koszyk-usuniecie-ostatniej-pozycji.spec.ts` |
 
 ### 1. Sortowanie „Cena: od najniższej” porównuje ceny jak tekst
 
@@ -97,6 +99,28 @@ npx playwright test tests/polowanie        # wersja zwykła: 6 passed
 - **Oczekiwane:** status 404 i treść `{ "error": "Nie ma takiego zamówienia" }`.
 - **Na `rc`:** status 200 i pusty obiekt `{}`. Tak samo dla innych złych numerów: `zam-1046`, `ZAM-0`, `abc`.
 - **Test:** API, tylko odczyt.
+
+### 7. Karta produktu niedostępnego ma aktywny przycisk „Dodaj do koszyka”
+
+- **Jak znaleźliśmy:** porównaliśmy na obu adresach atrybuty pól i przycisków (np. `disabled`), a nie tylko tekst stron.
+- **Odtworzenie krok po kroku:**
+  1. Zaloguj się kontem pary.
+  2. Otwórz kartę „Serum z witaminą C” (`/produkt/7`), stan 0. To samo dzieje się dla Maski do włosów i Dezodorantu.
+- **Oczekiwane:** „Niedostępny” i wyłączony przycisk „Dodaj do koszyka”. To wymaganie z `tests/review/09-produkt-niedostepny.spec.ts`.
+- **Na `rc`:** przycisk jest aktywny, chociaż pole „Ilość” jest wyłączone. Kliknięcie nic nie dodaje, bo serwer blokuje produkt bez stanu. W tabeli na stronie głównej przyciski są wyłączone poprawnie.
+- **Test:** przeglądarka, tylko odczyt.
+- **Tablica:** Klaudiusz-sędzia odpowiedział „nie rozpoznano błędu wersji rc” (zgłoszenie z obszarem „koszyk”), czyli prawdopodobnie tej różnicy nie ma na liście 10 błędów. Czekamy na decyzję trenera. Różnica jest prawdziwa: test pada na `rc` i przechodzi na wersji zwykłej.
+
+### 8. Po usunięciu ostatniej pozycji licznik koszyka pokazuje 1
+
+- **Jak znaleźliśmy:** z podpowiedzi w ćwiczeniu („co, jeśli klient usunie ostatnią rzecz?”).
+- **Odtworzenie krok po kroku:**
+  1. Zaloguj się kontem pary.
+  2. Włóż do koszyka jeden produkt, np. „Mydło w kostce”.
+  3. W koszyku kliknij „Usuń”.
+- **Oczekiwane:** „Koszyk jest pusty.” i „Pozycji: 0, razem: 0,00 zł”.
+- **Na `rc`:** „Koszyk jest pusty.”, ale licznik „Pozycji: 1, razem: 0,00 zł”. Dopiero odświeżenie strony pokazuje 0. Przy 2 i 3 pozycjach licznik po usunięciu jest poprawny, błąd dotyczy tylko ostatniej pozycji.
+- **Test:** przeglądarka. Przed testem i po nim koszyk jest opróżniany.
 
 ## Niespodzianki Klaudiusza (te same na obu adresach)
 
