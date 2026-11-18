@@ -160,7 +160,21 @@ cd "C:\PlaywrightProjects\20261116-18 - Szkolenie Playwright Claude\e2e-podstawy
 npx playwright test tests/projekt --workers=1
 ```
 
-Oczekiwany wynik: **28 passed**. Playwright sam uruchomi aplikację.
+Oczekiwany wynik: **29 passed**. Playwright sam uruchomi aplikację.
+
+Zmiana wymagań z 13:00 (ćwiczenie 12b) jest już w pakiecie. Żeby ją pokazać:
+
+```powershell
+npx playwright test tests/projekt/p13 tests/projekt/p16
+```
+Oczekiwany wynik: **4 passed**. P13 ma osobne wyniki dla 26.11 i 27.11, a P16 sprawdza 24 kalendarze za 959,76 zł.
+
+Jak zmiana wygląda w historii gita:
+
+```powershell
+git --no-pager log --stat -1 --grep="zmiana wymagań"
+```
+Wynik: commit „Projekt P13 i P16: zmiana wymagań Bożeny z 13:00”, w którym zmieniły się 2 istniejące pliki (`p13-odliczanie.spec.ts`, `p16-ilosc-z-karty.spec.ts`), bez `create mode`. Gdyby git pokazał `(END)`, wciśnij `q`.
 
 Gdyby w tym oknie był ustawiony serwer, najpierw go usuń:
 

@@ -4,15 +4,15 @@
 
 ## 1. Co pokrywa pakiet (1,5 min)
 
-- **16 scenariuszy (P1–P16), 28 testów** w `tests/projekt/`:
-  - 13 testów API: P5, P6, P7, P13, P14;
+- **16 scenariuszy (P1–P16), 29 testów** w `tests/projekt/`:
+  - 14 testów API: P5, P6, P7, P13, P14;
   - 15 testów E2E, z czego P8 i P15 łączą API z przeglądarką.
 - Obszary: zakup i zamówienia, koszyk, ceny promocyjne, kody rabatowe, faktura na firmę, adresy w profilu, uprawnienia (klient i administrator), odliczanie do Czarnego Piątku.
-- Lokalnie pakiet jest zielony: `28 passed`, także przy drugim uruchomieniu pod rząd (testy sprzątają po sobie).
+- Lokalnie pakiet jest zielony: `29 passed`, także przy drugim uruchomieniu pod rząd (testy sprzątają po sobie).
+- **Zmiana wymagań z 13:00 (ćwiczenie 12b) jest już w pakiecie.** P13 sprawdza daty 26.11 (został 1 dzień) i 27.11 (promocja trwa), P16 sprawdza 24 kalendarze za 959,76 zł. Zmieniliśmy istniejące pliki, bez nowych, a w historii gita jest osobny commit „Projekt P13 i P16: zmiana wymagań Bożeny z 13:00”.
 - Każdy test pokazał, że potrafi paść: zmiana jednej oczekiwanej wartości dawała `failed`.
 - **Czego pakiet nie sprawdza na `rc`:**
-  - scenariuszy administratora i Biura Mikołaja (P1, P3, P6–P8, P10, P14, P15), bo hasło konta `admin` na serwerze zna tylko trener;
-  - P13 i P16 są jeszcze w wersji sprzed zmiany wymagań z 13:00 (ćwiczenie 12b).
+  - scenariuszy administratora i Biura Mikołaja (P1, P3, P6–P8, P10, P14, P15), bo hasło konta `admin` na serwerze zna tylko trener.
 
 ## 2. Co znaleźliśmy (2 min)
 
