@@ -19,7 +19,7 @@ test("błędny kod pocztowy blokuje zapis adresu", async ({ page }) => {
 
   // 3. Wpisz kod pocztowy bez myślnika i zapisz formularz.
   await page.getByLabel("Kod pocztowy").fill("00000");
-  await page.getByRole("button", { name: "Zapisz adres" }).click();
+  await page.getByRole("button", { name: "Zapisz", exact: true }).click();
 
   // 4. Nad formularzem pojawia się podsumowanie z liczbą błędów.
   await expect(page.getByRole("alert")).toHaveText(

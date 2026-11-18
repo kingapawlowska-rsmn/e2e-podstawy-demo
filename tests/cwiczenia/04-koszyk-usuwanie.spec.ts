@@ -18,7 +18,7 @@ test('usunięty produkt znika z koszyka', async ({ page }) => {
     .getByRole('row')
     .filter({ hasText: 'Żel pod prysznic' });
   await wierszZeluNaLiscie.getByRole('button', { name: 'Dodaj do koszyka' }).click();
-  await expect(page.getByText('Dodano do koszyka: Żel pod prysznic')).toBeVisible();
+  await expect(page.getByText('Produkt w koszyku: Żel pod prysznic')).toBeVisible();
 
   // 3. Otwórz koszyk i sprawdź, że żel w nim jest.
   await page.getByRole('link', { name: 'Koszyk' }).click();

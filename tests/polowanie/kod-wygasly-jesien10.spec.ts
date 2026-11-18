@@ -21,7 +21,7 @@ test.describe('Wygasły kod rabatowy', () => {
   test('kod JESIEN10 jest odrzucony komunikatem o wygaśnięciu i nie daje rabatu', async ({ page }) => {
     await page.goto('/koszyk');
     await page.getByLabel('Kod rabatowy').fill('JESIEN10');
-    await page.getByRole('button', { name: 'Zastosuj kod' }).click();
+    await page.getByRole('button', { name: 'Użyj kodu' }).click();
 
     await expect(page.getByRole('alert')).toHaveText('Kod JESIEN10 wygasł 31.10.2026.');
     // Linia „Przed rabatem: …” pojawia się tylko przy przyjętym kodzie; suma zostaje 12,99 zł.

@@ -23,7 +23,7 @@ test("produkt w promocji trafia do koszyka z ceną promocyjną", async ({
 
   // 3. Sprawdź komunikat po dodaniu.
   await expect(
-    page.getByText("Dodano do koszyka: Krem do twarzy na dzień"),
+    page.getByText("Produkt w koszyku: Krem do twarzy na dzień"),
   ).toBeVisible();
 
   // 4. Przejdź do koszyka przez link w menu.

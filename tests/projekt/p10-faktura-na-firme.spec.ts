@@ -6,7 +6,7 @@ import { zaloguj, zalogujPrzezApi } from '../pomocnicze/logowanie';
 // „Faktura na firmę”, wpisuje NIP 101-202-30-36 i nazwę „Biuro Mikołaja”, klika „Złóż zamówienie (płatność przy odbiorze)”.
 // - strona „Moje zamówienia”, w adresie numer nowego zamówienia (zlozono=ZAM-…);
 // - na stronie zamówienia: „Faktura na firmę: Biuro Mikołaja” i NIP 1012023036;
-// - „Pobierz fakturę” pobiera plik faktura-ZAM-….html z numerem FV/2026/ZAM-…, danymi nabywcy
+// - „Faktura (HTML)” (przed hotfiksem „Pobierz fakturę”) pobiera plik faktura-ZAM-….html z numerem FV/2026/ZAM-…, danymi nabywcy
 //   i kwotą „Razem do zapłaty: 39,99 zł”;
 // - NIP 101-202-30-37 (zła suma kontrolna) zatrzymuje zamówienie: komunikat
 //   „Nieprawidłowy NIP: błędna suma kontrolna”, klient zostaje w koszyku.
@@ -50,7 +50,7 @@ test.describe('P10. Zamówienie na firmę i faktura', () => {
 
     // Plik faktury: nazwa z pobierania, treść z tego samego adresu.
     const pobieranie = page.waitForEvent('download');
-    await page.getByRole('link', { name: 'Pobierz fakturę' }).click();
+    await page.getByRole('link', { name: 'Faktura (HTML)' }).click();
     expect((await pobieranie).suggestedFilename()).toBe(`faktura-${numer}.html`);
 
     const plik = await (await page.request.get(`/zamowienia/${numer}/faktura`)).text();
