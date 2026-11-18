@@ -39,7 +39,7 @@ Do tego **6 niespodzianek Klaudiusza** (flagi): strona 404, ukryty endpoint z ko
 - bramka płatności przyjmuje kartę z błędną cyfrą kontrolną;
 - `%` w wyszukiwarce zwraca wszystkie produkty.
 
-**Wynik po hotfiksie Mirka:** *(do uzupełnienia po ćwiczeniu 12c)*
+**Wynik po hotfiksie Mirka (12c):** „same poprawki tekstów” dały **20 czerwonych testów**. 19 z nich to zmienione napisy („Dodano do koszyka” → „Produkt w koszyku”, „Zapisz adres” → „Zapisz”, „Zastosuj kod” → „Użyj kodu”, „Pobierz fakturę” → „Faktura (HTML)”, „Opłacone” → „Zapłacone”, „Niedostępny” → „Chwilowo brak”). Poprawiliśmy je na gałęzi `hotfix-testy`. **Jeden to prawdziwy błąd:** suma „razem” w koszyku pomija ilość (24 kalendarze: 39,99 zł zamiast 959,76 zł). Łapie go `P16 › 24 kalendarze z karty produktu dają w koszyku wartość i sumę 959,76 zł`: failed na hotfiksie, passed bez niego. Zgłoszenie dla Mirka: `HOTFIX-12C.md`.
 
 **Najważniejsze znalezisko z review krzyżowego:** *(do uzupełnienia po review)*
 
@@ -52,7 +52,9 @@ Uzasadnienie testami:
 - pakiet projektu na `rc`: padają `P9 › kafelek, karta produktu i koszyk pokazują cenę 26,39 zł…` (w koszyku 21,11 zł) i `P12 › nowy adres zostaje jedynym domyślnym…`;
 - błędy 2, 5 i 9 dotyczą pieniędzy: zła cena w koszyku i w zamówieniu, zły NIP na fakturze, rabat z wygasłego kodu.
 
-Wydamy, jeśli po hotfiksie `tests/polowanie` i `tests/projekt` będą zielone na nowej wersji.
+**Hotfixu też nie wydajemy:** błąd sumy koszyka (klient płaci złą kwotę) blokuje wydanie.
+
+Wydamy, jeśli w następnej wersji `tests/polowanie` i `tests/projekt` będą zielone, a P16 pokaże poprawną sumę.
 
 ## 4. Pytanie od Bożeny (0,5 min)
 
