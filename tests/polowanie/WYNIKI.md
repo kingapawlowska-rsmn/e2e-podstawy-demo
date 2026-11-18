@@ -214,6 +214,9 @@ npx playwright test tests/polowanie        # wersja zwykła: 10 passed
 
 - Do koszyka można włożyć więcej sztuk, niż jest na stanie, np. 1000 sztuk mydła przy 200 na stanie.
 - W koszyku można zapłacić kartą przy kwocie 0,00 zł.
+- Złożenie zamówienia z koszyka z 1000 sztuk (więcej niż stan) zwraca 201, ale zamówienie nie powstaje.
+- Bramka płatności przyjmuje kartę z błędną cyfrą kontrolną (`4111 1111 1111 1112`).
+- Znaki `%` i `_` w wyszukiwarce działają jak „dowolny tekst”: `%` zwraca wszystkie 21 produktów.
 
 ## Co zostało
 
