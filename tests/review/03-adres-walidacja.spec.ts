@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { TEKSTY } from '../pomocnicze/teksty';
 
 // Wymaganie: kod pocztowy bez myślnika („00000”) jest odrzucany. Przy polu
 // „Kod pocztowy” pojawia się komunikat „Kod pocztowy musi mieć format 00-000”,
@@ -18,7 +19,7 @@ test('błędny kod pocztowy blokuje zapis adresu', async ({ page }) => {
   await page.getByLabel('Kod pocztowy').fill('00000');
   await page.getByLabel('Miasto').fill('Warszawa');
   await page.getByLabel('Telefon').fill('500 100 200');
-  await page.getByRole('button', { name: 'Zapisz adres' }).click();
+  await page.getByRole('button', { name: TEKSTY.zapiszAdres, exact: true }).click();
 
   // Formularz zgłasza błąd w ramce w stylu błędu
   await expect(page.getByRole('alert')).toContainText('Popraw błędy');

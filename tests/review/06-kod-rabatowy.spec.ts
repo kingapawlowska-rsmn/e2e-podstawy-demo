@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { TEKSTY } from '../pomocnicze/teksty';
 
 // Wymaganie: klient wpisuje w koszyku kod CZARNY20. Kod zostaje przyjęty,
 // a suma do zapłaty spada o 20%. Komunikat o błędnym kodzie się nie pojawia.
@@ -16,7 +17,7 @@ test('kod CZARNY20 zostaje przyjęty w koszyku', async ({ page }) => {
 
   // Kod rabatowy
   await page.getByLabel('Kod rabatowy').fill('CZARNY20');
-  await page.getByRole('button', { name: 'Zastosuj kod' }).click();
+  await page.getByRole('button', { name: TEKSTY.zastosujKod }).click();
 
   // Kod przyjęty: nie ma komunikatu o błędnym kodzie
   await expect(page.getByText('Nieprawidłowy kod rabatowy')).not.toBeVisible();

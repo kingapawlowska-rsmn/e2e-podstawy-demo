@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { TEKSTY } from '../pomocnicze/teksty';
 import { zaloguj, zalogujPrzezApi } from '../pomocnicze/logowanie';
 
 // Projekt P15: status zamówienia w panelu admina.
@@ -20,7 +21,7 @@ test('administrator zmienia status na Opłacone i Wysłane, a klient widzi shipp
   await zaloguj(page, 'admin', 'admin123');
   await page.goto(`/admin/zamowienia/${numer}`);
 
-  for (const status of ['Opłacone', 'Wysłane']) {
+  for (const status of [TEKSTY.statusOplacone, 'Wysłane']) {
     await page.getByLabel('Status zamówienia').selectOption(status);
     await page.getByRole('button', { name: 'Zapisz status' }).click();
     await expect(page.getByText(/^Status:/)).toHaveText(`Status: ${status}`);

@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { TEKSTY } from "../pomocnicze/teksty";
 
 // Ćwiczenie 04b: ta sama cena promocyjna na kafelku, na karcie produktu i w koszyku.
 // Karta: docs/cwiczenia/04-locatory-codegen.md (część 04b)
@@ -43,7 +44,7 @@ test("cena promocyjna kremu jest taka sama na kafelku, karcie produktu i w koszy
   // 4. Dodaj krem do koszyka z karty produktu.
   await page.getByRole("button", { name: "Dodaj do koszyka" }).click();
   await expect(
-    page.getByText("Dodano do koszyka: Krem do twarzy na dzień"),
+    page.getByText(TEKSTY.dodanoDoKoszyka("Krem do twarzy na dzień")),
   ).toBeVisible();
 
   // 5. W koszyku sprawdź cenę kremu.
@@ -80,13 +81,13 @@ test("kod CZARNY20 obniża sumę do zapłaty za krem do 21,11 zł", async ({
     .getByRole("button", { name: "Dodaj do koszyka: Krem do twarzy na dzień" })
     .click();
   await expect(
-    page.getByText("Dodano do koszyka: Krem do twarzy na dzień"),
+    page.getByText(TEKSTY.dodanoDoKoszyka("Krem do twarzy na dzień")),
   ).toBeVisible();
 
   // 3. W koszyku wpisz kod CZARNY20 i zastosuj go.
   await page.getByRole("link", { name: "Koszyk" }).click();
   await page.getByLabel("Kod rabatowy").fill("CZARNY20");
-  await page.getByRole("button", { name: "Zastosuj kod" }).click();
+  await page.getByRole("button", { name: TEKSTY.zastosujKod }).click();
   await expect(
     page.getByText("Kod CZARNY20 przyjęty: -20% na całe zamówienie."),
   ).toBeVisible();

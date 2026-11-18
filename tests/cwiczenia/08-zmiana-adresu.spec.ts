@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { TEKSTY } from "../pomocnicze/teksty";
 
 // Zmiana adresu dostawy: scenariusz poprawny i trzy przypadki z tabeli Przykłady.
 // Scenariusze: docs/scenariusze/zmiana-adresu.md i docs/scenariusze/zmiana-adresu.feature
@@ -47,7 +48,7 @@ test.describe("Zmiana adresu dostawy", () => {
     await page.getByRole("textbox", { name: "Kod pocztowy" }).fill("00-001");
     await page.getByRole("textbox", { name: "Miasto" }).fill("Warszawa");
     await page.getByRole("textbox", { name: "Telefon" }).fill("500 100 200");
-    await page.getByRole("button", { name: "Zapisz adres" }).click();
+    await page.getByRole("button", { name: TEKSTY.zapiszAdres, exact: true }).click();
     await expect(page.getByRole("status")).toHaveText(
       "Zapisano adres dostawy.",
     );
@@ -76,7 +77,7 @@ test.describe("Zmiana adresu dostawy", () => {
       "600 200 300",
     );
 
-    await page.getByRole("button", { name: "Zapisz adres" }).click();
+    await page.getByRole("button", { name: TEKSTY.zapiszAdres, exact: true }).click();
 
     await expect(page.getByRole("status")).toHaveText("Zapisano adres dostawy.");
 
@@ -101,7 +102,7 @@ test.describe("Zmiana adresu dostawy", () => {
 
     // Zmień tylko kod pocztowy, resztę zostaw.
     await kodPocztowy.fill("31001");
-    await page.getByRole("button", { name: "Zapisz adres" }).click();
+    await page.getByRole("button", { name: TEKSTY.zapiszAdres, exact: true }).click();
 
     // Podsumowanie błędów nad formularzem.
     await expect(page.getByRole("alert")).toHaveText(
@@ -132,7 +133,7 @@ test.describe("Zmiana adresu dostawy", () => {
 
     // Zmień tylko telefon, resztę zostaw.
     await telefon.fill("12345");
-    await page.getByRole("button", { name: "Zapisz adres" }).click();
+    await page.getByRole("button", { name: TEKSTY.zapiszAdres, exact: true }).click();
 
     // Podsumowanie błędów nad formularzem.
     await expect(page.getByRole("alert")).toHaveText(
@@ -163,7 +164,7 @@ test.describe("Zmiana adresu dostawy", () => {
 
     // Wyczyść pole Miasto, resztę zostaw.
     await miasto.fill("");
-    await page.getByRole("button", { name: "Zapisz adres" }).click();
+    await page.getByRole("button", { name: TEKSTY.zapiszAdres, exact: true }).click();
 
     // Podsumowanie błędów nad formularzem.
     await expect(page.getByRole("alert")).toHaveText(

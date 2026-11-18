@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { TEKSTY } from '../pomocnicze/teksty';
 
 // Wymaganie: klient zmienia adres dostawy. Po zapisie widzi komunikat
 // „Zapisano adres dostawy.”, a formularz pokazuje nowy adres.
@@ -15,7 +16,7 @@ test('zmiana adresu dostawy zapisuje nowy adres', async ({ page }) => {
   await page.getByLabel('Kod pocztowy').fill('31-001');
   await page.getByLabel('Miasto').fill('Kraków');
   await page.getByLabel('Telefon').fill('600 200 300');
-  await page.getByRole('button', { name: 'Zapisz adres' }).click();
+  await page.getByRole('button', { name: TEKSTY.zapiszAdres, exact: true }).click();
 
   await expect(page.getByTestId('success')).toHaveText('Zapisano adres dostawy.');
   await expect(page.getByLabel('Ulica i numer')).toHaveValue('ul. Lipowa 7');

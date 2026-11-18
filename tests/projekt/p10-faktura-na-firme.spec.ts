@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { TEKSTY } from '../pomocnicze/teksty';
 import { zaloguj, zalogujPrzezApi } from '../pomocnicze/logowanie';
 
 // Projekt P10: zamówienie na firmę i faktura.
@@ -50,7 +51,7 @@ test.describe('P10. Zamówienie na firmę i faktura', () => {
 
     // Plik faktury: nazwa z pobierania, treść z tego samego adresu.
     const pobieranie = page.waitForEvent('download');
-    await page.getByRole('link', { name: 'Pobierz fakturę' }).click();
+    await page.getByRole('link', { name: TEKSTY.pobierzFakture }).click();
     expect((await pobieranie).suggestedFilename()).toBe(`faktura-${numer}.html`);
 
     const plik = await (await page.request.get(`/zamowienia/${numer}/faktura`)).text();

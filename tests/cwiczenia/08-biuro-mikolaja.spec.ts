@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { TEKSTY } from '../pomocnicze/teksty';
 import fs from 'node:fs';
 
 // Ćwiczenie 08, część B: zamówienie firmowe „Biuro Mikołaja” → status → faktura.
@@ -23,7 +24,7 @@ test('Biuro Mikołaja: zamówienie na firmę, status „Wysłane” i faktura z 
   await page.goto('/produkt/21');
   await page.getByRole('spinbutton', { name: 'Ilość' }).fill('10');
   await page.getByRole('button', { name: 'Dodaj do koszyka' }).click();
-  await expect(page.getByText('Dodano do koszyka: Kalendarz adwentowy 2026')).toBeVisible();
+  await expect(page.getByText(TEKSTY.dodanoDoKoszyka('Kalendarz adwentowy 2026'))).toBeVisible();
 
   // TODO 3: koszyk: ilość 10 w wierszu kalendarza, jedna pozycja, razem 399,90 zł
   await page.getByRole('link', { name: 'Koszyk' }).click();
@@ -50,7 +51,7 @@ test('Biuro Mikołaja: zamówienie na firmę, status „Wysłane” i faktura z 
   await expect(page.getByText('Status: Nowe')).toBeVisible();
   // NIP zapisuje się bez myślników.
   await expect(page.getByText('Faktura na firmę: Biuro Mikołaja, NIP 2412241228')).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Pobierz fakturę' })).toBeVisible();
+  await expect(page.getByRole('link', { name: TEKSTY.pobierzFakture })).toBeVisible();
 
   // TODO 6–8: „Wyloguj”, logowanie jako admin, /admin/zamowienia/<numer>,
   //   status „Opłacone”, „Zapisz status”, potem „Wysłane”. Po każdym zapisie sprawdź status.
@@ -69,9 +70,9 @@ test('Biuro Mikołaja: zamówienie na firmę, status „Wysłane” i faktura z 
   await expect(statusZamowienia).toBeVisible();
 
   // Krok 7: zmiana na „Opłacone”.
-  await statusZamowienia.selectOption('Opłacone');
+  await statusZamowienia.selectOption(TEKSTY.statusOplacone);
   await page.getByRole('button', { name: 'Zapisz status' }).click();
-  await expect(page.getByText('Status: Opłacone')).toBeVisible();
+  await expect(page.getByText(`Status: ${TEKSTY.statusOplacone}`)).toBeVisible();
 
   // Krok 8: zmiana na „Wysłane”.
   await statusZamowienia.selectOption('Wysłane');
@@ -94,7 +95,7 @@ test('Biuro Mikołaja: zamówienie na firmę, status „Wysłane” i faktura z 
   //   Treść pliku: fs.readFileSync(await pobieranie.path(), 'utf8') (import fs from 'node:fs').
   //   Plik to strona HTML: page.setContent(tresc) wczytuje go do przeglądarki, potem zwykłe lokatory.
   const pobieranieCzeka = page.waitForEvent('download');
-  await page.getByRole('link', { name: 'Pobierz fakturę' }).click();
+  await page.getByRole('link', { name: TEKSTY.pobierzFakture }).click();
   const pobieranie = await pobieranieCzeka;
   expect(pobieranie.suggestedFilename()).toBe(`faktura-${numer}.html`);
 

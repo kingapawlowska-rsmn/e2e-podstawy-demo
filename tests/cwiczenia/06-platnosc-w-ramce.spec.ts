@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { TEKSTY } from '../pomocnicze/teksty';
 
 // Ćwiczenie 06, część B: płatność w ramce (iframe).
 // Karta: docs/cwiczenia/06-dynamiczne-id.md
@@ -21,7 +22,7 @@ test.beforeEach(async ({ page }) => {
 
   // Płacić można tylko za niepusty koszyk.
   await page.getByRole('button', { name: 'Dodaj do koszyka: Maseczka glinkowa' }).click();
-  await expect(page.getByText('Dodano do koszyka: Maseczka glinkowa')).toBeVisible();
+  await expect(page.getByText(TEKSTY.dodanoDoKoszyka('Maseczka glinkowa'))).toBeVisible();
 });
 
 test('karta odrzucona przez bank pokazuje komunikat w ramce', async ({ page }) => {

@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { TEKSTY } from "../pomocnicze/teksty";
 
 // Ćwiczenie 02: pierwszy test „produkt w promocji w koszyku”.
 // Karta: docs/cwiczenia/02-pierwszy-test.md
@@ -23,7 +24,7 @@ test("produkt w promocji trafia do koszyka z ceną promocyjną", async ({
 
   // 3. Sprawdź komunikat po dodaniu.
   await expect(
-    page.getByText("Dodano do koszyka: Krem do twarzy na dzień"),
+    page.getByText(TEKSTY.dodanoDoKoszyka("Krem do twarzy na dzień")),
   ).toBeVisible();
 
   // 4. Przejdź do koszyka przez link w menu.

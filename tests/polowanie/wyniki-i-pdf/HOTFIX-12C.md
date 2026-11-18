@@ -77,3 +77,14 @@ Waga: wysoka. Klient widzi i płaci złą kwotę; to nie jest „kosmetyczna pop
 
 - Z 29 testów projektu tylko P16 ma w koszyku więcej niż 1 sztukę i tylko on złapał błąd sumy. Wymaganie Bożeny z 13:00 („suma razem równa sumie kolumny Wartość”) okazało się trafione.
 - Jedna zmiana tekstu („Dodano do koszyka” → „Produkt w koszyku”) wymagała poprawek w 5 plikach. Gdyby ten tekst był w jednym miejscu (funkcja pomocnicza albo Page Object), wystarczyłaby jedna poprawka.
+
+## Dla szybszych: napisy w jednym miejscu
+
+Na gałęzi `hotfix-testy` poprawki objęły **25 miejsc w 15 plikach**. Dlatego na `main` napisy, które zmienił hotfix, przenieśliśmy do jednego pliku `tests/pomocnicze/teksty.ts` (obiekt `TEKSTY`). Korzysta z niego 27 miejsc w 16 plikach testów.
+
+| Sprawdzenie | Wynik |
+|---|---|
+| `main`, bez hotfixu, `teksty.ts` z obecnymi napisami | **104 passed** |
+| hotfix, zmienione **tylko** 7 linii w `teksty.ts` | **102 passed, 2 failed** (P16 i 08-biuro, błąd sumy), tak samo jak na `hotfix-testy` |
+
+Następna zmiana napisu wymaga więc poprawki w jednym pliku, a nie w kilkunastu.

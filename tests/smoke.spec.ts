@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { TEKSTY } from './pomocnicze/teksty';
 
 // Testy dymne (@smoke): czy środowisko w ogóle działa.
 // Uruchomienie samych tych testów: npm run test:smoke
@@ -38,6 +39,6 @@ test('karta dostępnego produktu ma opis i aktywny przycisk „Dodaj do koszyka�
 
   await expect(page.getByRole('heading', { name: 'Szampon nawilżający' })).toBeVisible();
   await expect(page.getByTestId('product-description')).not.toBeEmpty();
-  await expect(page.getByTestId('product-availability')).toContainText('Dostępny');
+  await expect(page.getByTestId('product-availability')).toContainText(TEKSTY.kartaDostepny);
   await expect(page.getByRole('button', { name: 'Dodaj do koszyka' })).toBeEnabled();
 });

@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { TEKSTY } from "../pomocnicze/teksty";
 
 // Ćwiczenie 04, scenariusz C: adres dostawy z błędnym kodem pocztowym.
 // Karta: docs/cwiczenia/04-locatory-codegen.md
@@ -19,7 +20,7 @@ test("błędny kod pocztowy blokuje zapis adresu", async ({ page }) => {
 
   // 3. Wpisz kod pocztowy bez myślnika i zapisz formularz.
   await page.getByLabel("Kod pocztowy").fill("00000");
-  await page.getByRole("button", { name: "Zapisz adres" }).click();
+  await page.getByRole("button", { name: TEKSTY.zapiszAdres, exact: true }).click();
 
   // 4. Nad formularzem pojawia się podsumowanie z liczbą błędów.
   await expect(page.getByRole("alert")).toHaveText(

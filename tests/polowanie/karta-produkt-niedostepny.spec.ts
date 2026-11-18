@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { TEKSTY } from '../pomocnicze/teksty';
 import { zaloguj } from '../pomocnicze/logowanie';
 
 // Polowanie: produktu niedostępnego nie da się dodać do koszyka z karty produktu.
@@ -15,7 +16,7 @@ for (const produkt of ['Maska do włosów z olejem arganowym', 'Serum z witamin�
     await page.getByRole('article', { name: produkt }).getByRole('link', { name: produkt }).click();
     await expect(page.getByRole('heading', { name: produkt, level: 1 })).toBeVisible();
 
-    await expect(page.getByText('Niedostępny', { exact: true })).toBeVisible();
+    await expect(page.getByText(TEKSTY.kartaNiedostepny, { exact: true })).toBeVisible();
     // Gdy przycisk jest aktywny, klient może próbować dodać produkt, którego nie ma.
     await expect(page.getByRole('button', { name: 'Dodaj do koszyka' })).toBeDisabled();
   });
