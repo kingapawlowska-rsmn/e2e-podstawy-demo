@@ -1,6 +1,6 @@
 # Polowanie na błędy: wyniki pary tester04
 
-Spotkanie „wydajemy czy nie”, 18.11.2026. Stan tablicy o 10:22: **1. miejsce, 14 punktów, 6 błędów i 4 niespodzianki** (piąta niespodzianka zgłoszona później).
+Spotkanie „wydajemy czy nie”, 18.11.2026. Stan tablicy o 10:22: **1. miejsce, 14 punktów, 6 błędów i 4 niespodzianki** (później zgłoszone jeszcze 2 niespodzianki, razem 6).
 
 ## Jak szukaliśmy
 
@@ -95,7 +95,7 @@ npx playwright test tests/polowanie        # wersja zwykła: 6 passed
   1. Zaloguj się kontem pary.
   2. Wyślij `GET /api/orders/ZAM-9999`.
 - **Oczekiwane:** status 404 i treść `{ "error": "Nie ma takiego zamówienia" }`.
-- **Na `rc`:** status 200 i pusty obiekt `{}`.
+- **Na `rc`:** status 200 i pusty obiekt `{}`. Tak samo dla innych złych numerów: `zam-1046`, `ZAM-0`, `abc`.
 - **Test:** API, tylko odczyt.
 
 ## Niespodzianki Klaudiusza (te same na obu adresach)
@@ -107,6 +107,7 @@ npx playwright test tests/polowanie        # wersja zwykła: 6 passed
 | 3 | `FLAGA-ZN6MD` | `/api/promocja` z datą po Czarnym Piątku |
 | 4 | `FLAGA-RV9AY` | ukryty produkt „Kalendarz adwentowy 2025” |
 | 5 | `FLAGA-XLTK7` | kod rabatowy `KLAUDIUSZ` |
+| 6 | `FLAGA-WUR7S` | „Tryb Klaudiusza”: 5 kliknięć w logo |
 
 ### 1. `FLAGA-B38N2`: strona 404
 
@@ -144,6 +145,12 @@ npx playwright test tests/polowanie        # wersja zwykła: 6 passed
 - **Jak znaleźliśmy:** jako kody rabatowe wpisywaliśmy imiona osób z treści zadania.
 - **Sprzątanie:** po próbie koszyk opróżniony („Usuń kod” i usunięcie produktów).
 
+### 6. `FLAGA-WUR7S`: Tryb Klaudiusza
+
+- **Krok po kroku:** na dowolnej stronie sklepu kliknij 5 razy w logo „namssor” w lewym górnym rogu, w ciągu 10 sekund.
+- **Co widać:** na górze strony pojawia się „Tryb Klaudiusza: wszystkie testy są zielone. Jestem pewien, że to działa.”, a pod spodem „Flaga: FLAGA-WUR7S”. Flaga przychodzi z adresu `/tryb-klaudiusza`.
+- **Jak znaleźliśmy:** porównaliśmy skrypty, które serwer wysyła do przeglądarki (to dalej czarna skrzynka, bo każdy widzi je w DevTools). W skrypcie strony był licznik kliknięć w logo.
+
 ## Co sprawdziliśmy i działa tak samo na obu adresach
 
 - wyszukiwarka, filtr kategorii, sortowanie po nazwie, karty produktów
@@ -152,8 +159,19 @@ npx playwright test tests/polowanie        # wersja zwykła: 6 passed
 - walidacja ilości w koszyku (0, −1, 1,5, 1001), produkt niedostępny, nieistniejący produkt
 - walidacja telefonu, długości nazwy i ulicy, pustych pól w adresach; walidacja adresu głównego
 - NIP w zamówieniu firmowym (za krótki, zła suma kontrolna, pusty), zamówienie z koszyka z fakturą
+- zamówienie jednego produktu `POST /api/orders`: ilość 0, 11 i 10,5, produkt niedostępny i nieistniejący, cena promocyjna w zamówieniu
 - płatność kartą w ramce: karta przyjęta, karta odrzucona
 - widok „Moje zamówienia” i szczegóły zamówienia
+- kody rabatowe w różnych dniach (nagłówek `X-Namssor-Teraz`), `WLOSY15` bez produktów do włosów, zmiana kodu, przeliczenie po dodaniu produktu
+- odliczanie do promocji dzień po dniu, z poprawną odmianą „dni / dzień / dni”
+- wyszukiwarka i filtr kategorii w API i na stronie: wielkie litery, polskie znaki, spacje
+- stan magazynu po zamówieniu (`/api/orders`, zamówienie firmowe, zamówienie z koszyka), dostęp do cudzych zamówień (404)
+- logowanie przez API (wielkość liter, spacje, brak pól), token, przekierowanie `next` (także na obcą stronę), wylogowanie
+- nazwa adresu z HTML (`<b>`) jest wyświetlana jako tekst, a nie wykonywana
+- skrypty wysyłane do przeglądarki są identyczne na obu adresach
+- scenariusze z `docs/projekt.md` dostępne dla klienta: P1, P2, P4, P5, P6, P9–P14 i P16. Różnią się tylko przez znany błąd nr 2: w P9 i P16 krem kosztuje w koszyku 21,11 zł zamiast 26,39 zł
+- daty zamówienia, szczegółów i faktury oraz „dzisiejsza” data promocji
+- faktura pobierana z przeglądarki (`/zamowienia/[numer]/faktura`); ma ten sam błąd NIP co błąd nr 5
 
 ## Obserwacje bez punktu (na obu adresach)
 
@@ -162,4 +180,7 @@ npx playwright test tests/polowanie        # wersja zwykła: 6 passed
 
 ## Co zostało
 
-- **Błąd #10:** nikt go jeszcze nie znalazł. Najpewniej jest w statusach zamówień (Nowe → Opłacone → Wysłane, anulowanie). Do sprawdzenia potrzebne jest konto `admin`, czekamy na zgodę trenera.
+- **Błąd #10:** nikt go jeszcze nie znalazł.
+  - Statusów zamówień nie da się sprawdzić z konta pary: na serwerach działają tylko konta `tester01`–`tester12`, a `admin` / `admin123` nie loguje się. Według `docs/projekt.md` hasło do konta `admin` na serwerze zna tylko trener.
+  - Pakiet nie sprawdza na `rc` scenariuszy administratora: P3 (dodanie produktu), P8 (anulowanie w panelu), P15 (status w panelu) i części P7. Jeśli w `rc` są tam błędy, nasz pakiet ich nie zobaczy, a o wydaniu trzeba zdecydować razem z tym ryzykiem.
+  - W przeglądarce sprawdziliśmy jeszcze kartę produktu z ilością, „Usuń” w koszyku, zmianę adresu głównego, przyciski „Ustaw jako domyślny” i „Usuń” w „Moich adresach” oraz zamówienie z błędnym NIP. Wszystko działa tak samo na obu adresach, poza znanym błędem nr 4 (adres domyślny).
