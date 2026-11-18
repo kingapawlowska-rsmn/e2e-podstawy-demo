@@ -7,7 +7,7 @@ import { zaloguj } from "../pomocnicze/logowanie";
 // (data i godzina w nazwie). Dzięki temu przechodzi przy każdym uruchomieniu.
 // Lokalnie stan startowy przywraca `npm run db:reset`.
 
-test("administrator dodaje produkt, a klient znajduje go na stronie Produkty jako dostępny za 12,50 zł", async ({
+test("administrator dodaje produkt, a wyszukiwarka na stronie Produkty pokazuje go jako dostępny za 12,50 zł", async ({
   page,
 }) => {
   const nazwa = `Produkt testowy P3 ${new Date().toISOString()}`;
