@@ -1,6 +1,6 @@
 # Polowanie na błędy: wyniki pary tester04
 
-Spotkanie „wydajemy czy nie”, 18.11.2026. Stan tablicy o 10:22: **1. miejsce, 14 punktów, 6 błędów i 4 niespodzianki** (później zgłoszone jeszcze 2 niespodzianki, razem 6).
+Spotkanie „wydajemy czy nie”, 18.11.2026. Wynik końcowy: **9 zaliczonych błędów** (wszystkie, które da się znaleźć z konta klienta; dziesiąty jest w funkcjach administratora) i **6 niespodzianek**.
 
 ## Jak szukaliśmy
 
@@ -17,9 +17,9 @@ Spotkanie „wydajemy czy nie”, 18.11.2026. Stan tablicy o 10:22: **1. miejsce
 $env:APP_USER="tester04"
 $env:APP_PASSWORD="czarny-piatek-2026"
 $env:BASE_URL="https://namssor-rc-376292984721.europe-central2.run.app"
-npx playwright test tests/polowanie        # rc: 7 failed
+npx playwright test tests/polowanie        # rc: 10 failed (9 plików, test karty produktu ma 2 przypadki)
 $env:BASE_URL="https://namssor-376292984721.europe-central2.run.app"
-npx playwright test tests/polowanie        # wersja zwykła: 7 passed
+npx playwright test tests/polowanie        # wersja zwykła: 10 passed
 ```
 
 ## Błędy (tylko na `rc`)
@@ -32,8 +32,9 @@ npx playwright test tests/polowanie        # wersja zwykła: 7 passed
 | 4 | adresy | nowy adres staje się domyślny | `adres-domyslny.spec.ts` |
 | 5 | faktura | NIP sprzedawcy zamiast NIP nabywcy | `faktura-nip-nabywcy.spec.ts` |
 | 6 | API | 200 zamiast 404 dla nieistniejącego zamówienia | `api-zamowienie-nieistniejace.spec.ts` |
-| 7 | koszyk / inne | aktywny „Dodaj do koszyka” na karcie produktu niedostępnego | `karta-produkt-niedostepny.spec.ts` |
+| 7 | inne | aktywny „Dodaj do koszyka” na karcie produktu niedostępnego | `karta-produkt-niedostepny.spec.ts` |
 | 8 | koszyk | po usunięciu ostatniej pozycji licznik „Pozycji: 1” | `koszyk-usuniecie-ostatniej-pozycji.spec.ts` |
+| 9 | kody | wygasły kod `JESIEN10` przyjęty (-10%) | `kod-wygasly-jesien10.spec.ts` |
 
 ### 1. Sortowanie „Cena: od najniższej” porównuje ceny jak tekst
 
@@ -109,7 +110,8 @@ npx playwright test tests/polowanie        # wersja zwykła: 7 passed
 - **Oczekiwane:** „Niedostępny” i wyłączony przycisk „Dodaj do koszyka”. To wymaganie z `tests/review/09-produkt-niedostepny.spec.ts`.
 - **Na `rc`:** przycisk jest aktywny, chociaż pole „Ilość” jest wyłączone. Kliknięcie nic nie dodaje, bo serwer blokuje produkt bez stanu. W tabeli na stronie głównej przyciski są wyłączone poprawnie.
 - **Test:** przeglądarka, tylko odczyt.
-- **Tablica:** Klaudiusz-sędzia odpowiedział „nie rozpoznano błędu wersji rc” (zgłoszenie z obszarem „koszyk”), czyli prawdopodobnie tej różnicy nie ma na liście 10 błędów. Czekamy na decyzję trenera. Różnica jest prawdziwa: test pada na `rc` i przechodzi na wersji zwykłej.
+- **Tablica:** pierwsza wersja testu (tylko Serum, obszar „koszyk”) nie została rozpoznana. Zaliczona druga wersja, oparta na wymaganiu z `tests/czytanie/05-karta-produktu.spec.ts`: karta otwierana z kafelka, sprawdzane Maska do włosów i Serum, obszar „inne”. Ten gotowy test z repo też pada tylko na `rc`.
+- **Wniosek na przyszłość:** warto uruchomić na `rc` gotowe testy z repo, bo pokazują wymagania, o których sami byśmy nie pomyśleli.
 
 ### 8. Po usunięciu ostatniej pozycji licznik koszyka pokazuje 1
 
@@ -120,6 +122,17 @@ npx playwright test tests/polowanie        # wersja zwykła: 7 passed
   3. W koszyku kliknij „Usuń”.
 - **Oczekiwane:** „Koszyk jest pusty.” i „Pozycji: 0, razem: 0,00 zł”.
 - **Na `rc`:** „Koszyk jest pusty.”, ale licznik „Pozycji: 1, razem: 0,00 zł”. Dopiero odświeżenie strony pokazuje 0. Przy 2 i 3 pozycjach licznik po usunięciu jest poprawny, błąd dotyczy tylko ostatniej pozycji.
+- **Test:** przeglądarka. Przed testem i po nim koszyk jest opróżniany.
+
+### 9. Wygasły kod JESIEN10 jest przyjmowany
+
+- **Jak znaleźliśmy:** w dokumentacji ćwiczeń (`docs/cwiczenia/extra-d1-przegladarki-i-dane.md`) jest opis kodu `JESIEN10` jako wygasłego. Nie było go w żadnym naszym teście.
+- **Odtworzenie krok po kroku:**
+  1. Zaloguj się kontem pary.
+  2. Włóż do koszyka „Szampon nawilżający” (12,99 zł).
+  3. Wpisz kod `JESIEN10` i kliknij „Zastosuj kod”.
+- **Oczekiwane:** komunikat „Kod JESIEN10 wygasł 31.10.2026.”, bez rabatu, suma 12,99 zł.
+- **Na `rc`:** „Kod JESIEN10 przyjęty: -10% na całe zamówienie.”, suma 11,69 zł. Wielkość liter i data podana w nagłówku `X-Namssor-Teraz` nie mają znaczenia.
 - **Test:** przeglądarka. Przed testem i po nim koszyk jest opróżniany.
 
 ## Niespodzianki Klaudiusza (te same na obu adresach)
